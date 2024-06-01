@@ -1,0 +1,240 @@
+    /*******Update Profiles Styles*******/
+
+    .update-form {
+        max-width: 600px;  
+        margin: 40px auto;   
+        padding: 20px;     
+        background-color:  var(--settings-color);
+        border-radius: 8px; 
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
+    }
+    
+    /*******Settings Styles*******/
+    .settings-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: var(--settings-color);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .settings-header {
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    .settings-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    .settings-list li {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .settings-list li:last-child {
+        border-bottom: none;
+    }
+    .settings-list a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+        transition: color 0.3s;
+    }
+    .settings-list a:hover {
+        color: var(--hover-color);
+    }
+
+    /*******Register Styles*******/    
+    @media (max-width: 768px) {
+        .registration-form {
+            padding: 10px;
+            margin: 20px;
+        }
+    }
+    
+	.registration-title {
+		 margin-top: 10px;
+		 text-align: center;
+	}
+	    
+    .registration-form {
+        background-color: var(--registration-color);
+	 	 max-width: 400px;
+		 width: 90%;
+		 margin: 10px auto;
+		 margin-bottom: 100px;
+		 padding: 20px;
+		 border-radius: 8px;
+		 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+		 overflow-y: auto;
+    }
+
+    .registration-form p {
+        margin-bottom: 15px; 
+    }
+
+    .registration-form label {
+        font-weight: bold;
+        display: block;  
+        margin-bottom: 5px;
+    }
+
+    .registration-form input[type="text"],
+    .registration-form input[type="password"],
+    .registration-form input[type="email"],
+    .registration-form input[type="tel"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+
+    .help-text {
+        display: block;
+        margin-top: 5px;
+        font-size: 12px;
+        color: #6c757d;
+    }
+
+    .registration-note {
+        text-align: center;
+        font-size: 14px;
+        color: #dc3545; 
+        margin-top: 10px;
+    }
+    /*******Password Reset Styles*******/
+    .password-reset-form {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: var(--settings-color);
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /*******Password Reset Confirm Styles*******/ 
+    .password-reset-confirm {
+        max-width: 400px;
+        margin: 50px auto; 
+        padding: 20px;
+        background-color: var(--settings-color);
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    /*******Password Reset Complete Styles*******/ 
+    .reset-complete {
+        max-width: 400px;
+        margin: 50px auto; 
+        padding: 20px;
+        background-color: var(--settings-color);
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    /*******Login Styles*******/     
+    .login-form {
+        max-width: 400px; 
+        margin: 50px auto;
+        padding: 20px;
+        background-color: var(--login-color);
+        border-radius: 8px; 
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .btn-custom {
+        background-color: var(--primary-color);
+        color: white;
+        font-size: larger;
+        width: 100%;
+        border: none;
+        padding: 10px; 
+        border-radius: 5px; 
+    }
+    /*******Index/Home Page Styles*******/     
+    .welcome-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center; 
+        align-items: center; 
+        height: 100vh; 
+        color: black;
+        font-size: 2rem; 
+        font-weight: bold;
+        background-color: var(--welcome-bg-color);
+        padding-top: 5%; 
+    }
+	
+    /*******Change Password Styles*******/
+    .password-form {
+        max-width: 400px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: var(--settings-color);
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        font-family: Arial, sans-serif; 
+    }
+    /*Admin Dashboard Styles*/    	    
+     .admin-dashboard {
+         max-width: 800px;
+         margin: 20px auto;
+         padding: 20px;
+         background-color: var(--dashboard-color);
+         border: 1px solid #ddd;
+     }
+     .admin-dashboard h1, .admin-dashboard h2 {
+         color: #333;
+     }
+     .admin-dashboard .user-info {
+         padding: 10px;
+         margin-bottom: 10px;
+         border-bottom: 1px solid #eee;
+     }
+     .admin-dashboard button {
+         background-color: var(--dashboard-btn-color);
+         color: white;
+         padding: 10px 20px;
+         border: none;
+         border-radius: 4px;
+         cursor: pointer;
+         transition: background-color 0.3s;
+     }
+     .admin-dashboard button:hover {
+         background-color: var(--dashboard-hover-btn-color);
+     }
+	  .admin_dashboard-header {
+		   text-align: center;
+		   margin-bottom: 30px;
+	  }        
+   /*******User Approved*******/     
+	.user-approved-container {
+		max-width: 600px;
+		margin: auto;
+		padding-top: 50px;
+	}
+  .user-approved-container .alert {
+      background-color: #f2f2f2;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      padding: 20px;
+      text-align: center;
+  }
+  .user-approved-container .alert-heading {
+      color: #4CAF50;
+      margin-bottom: 20px;
+  }
+  .user-approved-container .alert p {
+      color: #666;
+      line-height: 1.6;
+  }
+  .user-approved-container .alert a {
+      color: #0062cc;
+      text-decoration: none;
+      font-weight: bold;
+  }
+  .user-approved-container .alert a:hover {
+      text-decoration: underline;
+  }
+               
+    
+            

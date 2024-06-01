@@ -1,0 +1,33 @@
+:root {
+    --primary-color: #03534f;  
+    --hover-color: #06033f;   
+    --dropdwon-bg-color: #f8f9fa;  
+    --dropdwon-active-color: #A8A9Aa;   
+    --navbar-text-color: #ffffff;  
+    --navbar-hover-color: #A8A9Aa;
+    --navbar-title-color: #ffffff;
+    --header-bg-color: #f7f7f7;   
+    --page-bg-color: #fafdff; 
+    --message-success-bg-color: #ddffdd; 
+    --message-error-bg-color: #ffdddd;
+    --message-success-border-color: #33cc33; 
+    --message-error-border-color: #cc3333;    
+    --browse-btn-color: #ddd;
+    --remove-btn-color: #d55;
+    --remove-hover-btn-color: #f66;    
+    --add-btn-color: #57f;
+    --add-hover-btn-color: #78f;    
+    --analyze-btn-color: #43C436;
+    --analyze-hover-btn-color: #54D547;    
+    --filter-btn-color: #54C7FF;
+    --filter-hover-btn-color: #94F7FF;
+    --settings-color: #fee;
+    --registration-color: #ffd;
+    --login-color: #fff;
+    --dashboard-color: #fafaea;
+    --dashboard-btn-color: #4CAF50;
+    --dashboard-hover-btn-color: #45a049;
+    --upload-bg-color: #fefefe;
+    --manage-bg-color: #fefefe;
+}
+

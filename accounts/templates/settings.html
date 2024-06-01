@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Settings {% endblock %}
+
+{% block css %}{% endblock %}
+
+{% block body %}
+<div class="page-body">
+	<div class="container mt-4">
+	<h1 class="settings-header">Settings</h1>
+	</div>
+	<div class="container mt-4">
+		<div class="settings-container">
+			 <ul class="settings-list">
+				  <li><a href="{% url 'change_password' %}">Change Password</a></li>
+				  <li><a href="{% url 'update_profile' %}">Update Profile Information</a></li>
+			 </ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
+

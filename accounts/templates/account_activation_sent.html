@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Account Activation Sent{% endblock %}
+
+{% block css %}
+<style>
+    .activation-message {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        text-align: center;
+    }
+    .home-link {
+        display: block;
+        margin-top: 20px;
+        text-align: center;
+        font-size: 18px;
+        color: #007bff;
+        text-decoration: none;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-body">
+	<div class="container">
+		 <div class="activation-message">
+		     <h2>Account Registration Received</h2>
+		     <p>Thank you for registering. Your account is currently under review. Once verified, you will receive an email with a link to activate your account. This process may take 1-3 business days.</p>
+		     <p>Please check your email, including your spam folder, for the activation link after this time. The link will expire in {{ activation_days }} days after being sent.</p>
+		     <a href="{% url 'index' %}" class="home-link">Return to Homepage</a>
+		 </div>
+	</div>
+</div>
+{% endblock %}
+

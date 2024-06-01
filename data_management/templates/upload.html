@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}File Upload{% endblock %}
+
+{% block css %}
+<style>
+    body {
+        background-color: #ffffff; /* Light gray */
+        transition: background-color 0.5s ease;
+        position: relative;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+        z-index: 9998;
+        backdrop-filter: blur(5px); /* Apply blur to the background */
+        display: none; /* Initially hidden */
+    }
+
+    .loader {
+        border: 16px solid #f3f3f3; /* Light grey */
+        border-top: 16px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 100px; 
+        height: 100px; 
+        animation: spin 2s linear infinite;
+        position: fixed;
+        top: 50%; /* Center vertically */
+        left: 50%; /* Center horizontally */
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        display: none; /* Initially hidden */
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Additional styles for the page layout */
+    .page-body {
+        margin: 0 auto;
+        max-width: 800px;
+        padding: 20px;
+    }
+
+</style>
+{% endblock %}
+{% block body %}
+<div class="page-body">
+    <div class="upload-files-title">
+        <h1>Upload FOS Data</h1>
+    </div>
+    <div class="upload-page-container">
+
+        <!-- Display messages -->
+        {% if messages %}
+        <ul id="responseMessage" class="upload-messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        <script>
+            // Remove messages after displaying them
+            setTimeout(function() {
+                document.querySelector('.upload-messages').style.display = 'none';
+            }, 5000); // 5000 milliseconds = 5 seconds
+        </script>
+        {% endif %}
+
+        <form id="uploadForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="upload-file-input-container">
+                <label class="upload-browse-button">Browse
+                    <input type="file" name="file" class="upload-file-input" accept=".bin" onchange="document.getElementById('file-chosen').textContent = this.files[0].name || 'No file chosen';">
+                </label>
+                <span id="file-chosen" class="upload-filename-display">Upload FOS Recording (.bin)</span>
+            </div>
+            <div class="upload-file-input-container">
+                <label class="upload-browse-button">Browse
+                    <input type="file" name="kml_file" id="id_kml_file" class="upload-file-input" accept=".kml" onchange="document.getElementById('kml-file-chosen').textContent = this.files[0].name || 'No file chosen';">
+                </label>
+                <span id="kml-file-chosen" class="upload-filename-display">Upload FOS Map (.kml)</span>
+            </div> 
+            <div class="upload-file-input-container">
+                <label class="upload-browse-button">Browse
+                    <input type="file" name="fibre_calibrations" class="upload-file-input" accept=".csv" onchange="document.getElementById('csv-file-chosen').textContent = this.files[0].name || 'No file chosen';">
+                </label>
+                <span id="csv-file-chosen" class="upload-filename-display">Upload Fiber Calibrations  (.csv)</span>
+            </div>             
+            <div class="upload-form-group">
+                <label for="id_fos_serial_number">FOS Serial Number:</label>
+                {{ form.fos_serial_number }}
+            </div>
+            <div class="upload-form-group">
+                <label for="id_event_type">Event Type:</label>
+                {{ form.event_type }}
+            </div>
+            <div class="upload-form-group">
+                <label for="id_event_description">Event Description:</label>
+                {{ form.event_description }}
+            </div>
+            <div class="upload-container">
+                <h1>Event Details</h1>
+                <p>Please provide additional information about the source of the event. It is crucial to use <strong>accurate, verified data only</strong>. Include units where necessary. Examples of fields you might add:</p>
+                <ul class="upload-event-details-examples">
+                    <li><strong>Speed:</strong> 100 km/h</li>
+                    <li><strong>Weight:</strong> 56 kg</li>
+                    <li><strong>Tool Used:</strong> Hammer</li>
+                    <li><strong>Carriages:</strong> 10</li>
+                    <li><strong>Strikes:</strong> 6</li>
+                    <li><strong>Rainfall:</strong> 100 mm</li>
+                    <li><strong>RPM:</strong> 5000</li>
+                </ul>
+                <div id="dynamicField">
+                    <!-- Dynamic fields will be added here -->
+                </div>
+                <button type="button" id="addField" class="btn upload-btn-info">Add Field</button>
+                <button type="submit" id="submitButton" class="btn upload-btn-primary">Submit</button>
+            </div>
+            <div class="overlay"></div> <!-- Overlay for the blur effect -->
+            <div class="loader"></div> 
+        </form>
+        
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.2/awesomplete.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.2/awesomplete.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+<script>
+    document.getElementById("uploadForm").addEventListener("submit", function() {
+        document.querySelector(".loader").style.display = "block";
+        document.querySelector(".overlay").style.display = "block";
+        document.body.classList.add("blur");
+
+        // Clear the response message
+        if (responseMessage) {
+            responseMessage.style.display = "none";
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Fetch folder names from the server
+        fetch("/azure_blob_folders/")
+            .then(response => response.json())
+            .then(data => {
+                // Initialize the autocomplete widget
+                new Awesomplete(document.querySelector("#id_fos_serial_number"), {
+                    list: data,
+                    minChars: 1 // Show suggestions on focus
+                }).evaluate();
+            })
+            .catch(error => {
+                console.error("Failed to fetch folder names:", error);
+            });
+    });
+    
+</script>
+{% endblock %}

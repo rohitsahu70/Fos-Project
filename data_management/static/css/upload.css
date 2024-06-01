@@ -1,0 +1,98 @@
+    .upload-files-title {
+       margin-top: 40px; 
+		 text-align: center; 
+    }
+    .upload-page-container {
+        background-color: var(--upload-bg-color);
+        padding: 20px;
+        margin: 40px auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 600px;
+		 max-height: calc(100vh - 80px);
+		 overflow-y: auto;   
+		 margin-bottom: 100px; 
+    }
+    .upload-file-input-container {
+        position: relative;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 5px 10px;
+        margin-bottom: 20px;
+    }
+    .upload-browse-button {
+        background-color: var(--browse-btn-color);
+        border: none;
+        padding: 6px 12px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    .upload-file-input {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+    .upload-filename-display {
+        margin-left: 10px;
+		  overflow-wrap: anywhere
+    }
+    .upload-form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+    .upload-form-group label, .upload-form-group input {
+        width: 100%;
+    }
+    .upload-messages li {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: center;
+        list-style-type: none;
+    }
+	.upload-event-details-examples {
+		 padding-left: 20px;
+		 list-style-type: square;
+	}
+
+	.upload-event-details-examples li {
+		 margin-bottom: 8px;
+		 font-size: 16px; 
+	}
+
+	.upload-btn-info, .upload-btn-primary {
+		 margin-top: 10px;
+		 width: auto; 
+		 padding: 10px 15px;
+		 background-color: var(--add-btn-color); 
+	}
+
+	.upload-btn-info:hover, .upload-btn-primary:hover {
+		 opacity: 0.8; 
+		 background-color: var(--add-hover-btn-color);
+	}
+
+	.upload-remove-btn{
+		 width: auto;
+		 height: 45px; 
+		 padding: 10px 15px;
+		 background-color: var(--remove-btn-color); 
+	}
+
+	.upload-remove-btno:hover{
+		 opacity: 0.8; 
+		 var(--remove-hover-btn-color);
+	}	
+
+

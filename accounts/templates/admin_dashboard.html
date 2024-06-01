@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block css %}{% endblock %}
+{% block body %}
+<div class="page-body">
+	<div class="admin-dashboard">
+		 <div class="container">
+		     <h1 class="admin_dashboard-header">Admin Dashboard</h1>
+		     <h2>Pending User Approvals</h2>
+		     {% for user in users_pending_approval %}
+		     <div class="user-info">
+		         <form action="{% url 'admin_approve' user.id %}" method="post">
+		             <p>{{ user.username }} - {{ user.email }}</p>
+		             {% csrf_token %}
+		             <button type="submit" class="btn btn-success">Approve User</button>
+		         </form>
+		     </div>
+		     {% endfor %}
+		     <h2>Approved Users Awaiting Activation</h2>
+		     {% for user in approved_not_activated %}
+		     <div class="user-info">
+		         <p>{{ user.username }} - {{ user.email }} - Pending Activation</p>
+		     </div>
+		     {% endfor %}
+		 </div>
+	</div>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Update Profile {% endblock %}
+
+{% block css %}{% endblock %}
+{% block body %}
+<div class="page-body">
+    <div class="update-form">
+        <h2 class="mb-3">Update Your Profile</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" value="{{ request.user.username }}" readonly>
+            </div>            
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" name="email" id="email" class="form-control" value="{{ user.email }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="phone_number" class="form-label">Phone Number:</label>
+                <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ profile.phone_number }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="{% url 'settings' %}" class="btn btn-secondary btn-back">Back to Settings</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    {% if alert %}
+    alert("{{ alert }}");  // Displaying the alert passed from the view
+    {% endif %}
+</script>
+{% endblock %}
+

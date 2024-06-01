@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}User Approved{% endblock %}
+{% block css %}{% endblock %}
+{% block body %}
+<div class="page-body">
+	<div class="user-approved-container">
+		 <div class="container">
+		     <div class="alert">
+		         <h4 class="alert-heading">User Approved Successfully!</h4>
+		         <p>An activation email has been sent to {{ user.email }}. The user must follow the instructions in the email to activate their account.</p>
+		     </div>
+		 </div>
+	</div>
+</div>
+{% endblock %}
+

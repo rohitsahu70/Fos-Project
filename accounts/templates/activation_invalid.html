@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Activation Failed{% endblock %}
+{% block css %}{% endblock %}
+{% block body %}
+<div class="page-body">
+	<div class="container">
+		 <h1>Account Activation Failed</h1>
+		 <p>Unfortunately, your account could not be activated. This might be because the activation link has expired or is invalid.</p>
+		 <p>Please try to <a href="{% url 'resend_activation_email' %}">request a new activation link</a> or contact our support team for assistance.</p>
+	</div>
+</div>
+{% endblock %}
+
