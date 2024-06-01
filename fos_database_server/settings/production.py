@@ -1,33 +1,39 @@
 from urllib.parse import urlparse
 from .base import *
 
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = os.environ['DEBUG'] == 'True'
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
-ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else ['*']
-CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
+ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] \
+    if 'WEBSITE_HOSTNAME' in os.environ else ['*']
+CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']] \
+    if 'WEBSITE_HOSTNAME' in os.environ else []
 
-redis_url = os.environ.get('REDIS_URL')
-if redis_url:
-    parsed_redis_url = urlparse(redis_url)
-    hostname = parsed_redis_url.hostname
-    port = parsed_redis_url.port
-    password = parsed_redis_url.password
-    ssl = parsed_redis_url.scheme == 'rediss'
-    abort_connect = parsed_redis_url.query == 'abortConnect=False'
-else:
-    raise ValueError("REDIS_URL environment variable is not set")
+redis_url = os.environ['redis_url']
+# Manually parse the Redis URL string
+params = {}
+for param in redis_url.split(','):
+    key_value = param.split('=', 1)
+    if len(key_value) == 2:
+        params[key_value[0]] = key_value[1]
+    else:
+        params['hostname'] = key_value[0]
+
+# Extract the components
+hostname, port = params.get('hostname').split(':')
+password = params.get('password')
+abort_connect = params.get('abortConnect') == 'False'
 
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f"redis://{hostname}:{port}/0",
+        'LOCATION': f"redis://:{password}@{hostname}:{port}/0",
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'PASSWORD': password,
-            'SSL': ssl,
-            'ABORT_CONNECT': abort_connect,
+            'SSL': True,
+            'ABORT_CONNECT': abort_connect
         }
     }
 }
@@ -48,12 +54,19 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+
+zSTATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Configure Postgres database based on connection string of the libpq
+# Keyword/Value form
+# https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING
 conn_str = os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
-conn_str_params = {pair.split('=')[0]: pair.split('=')[1] for pair in conn_str.split(' ')}
+conn_str_params = {
+    pair.split('=')[0]: pair.split('=')[1] for pair in conn_str.split(' ')
+}
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
