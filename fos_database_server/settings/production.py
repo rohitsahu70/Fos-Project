@@ -1,3 +1,4 @@
+from urllib.parse import urlparse
 from .base import *
 
 DEBUG = os.environ['DEBUG'] == 'True'
@@ -9,14 +10,40 @@ ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] \
 CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']] \
     if 'WEBSITE_HOSTNAME' in os.environ else []
 
+redis_url = ""
+redis_url = os.environ['redis_url']
+# Manually parse the Redis URL string
+params = {}
+for param in redis_url.split(','):
+    key_value = param.split('=', 1)
+    if len(key_value) == 2:
+        params[key_value[0]] = key_value[1]
+    else:
+        params['hostname'] = key_value[0]
+
+# Extract the components
+hostname, port = params.get('hostname').split(':')
+password = params.get('password')
+ssl = params.get('ssl') == 'True'
+abort_connect = params.get('abortConnect') == 'False'
+
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-        'LOCATION': '127.0.0.1:11211',
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f"redis://:{password}@{hostname}:{port}/0",
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': password,
+            'SSL': ssl,
+            'ABORT_CONNECT': abort_connect
+        }
     }
 }
 
-# WhiteNoise configuration to server static files in production
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+
+# WhiteNoise configuration to serve static files in production
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     # Add whitenoise middleware after the security middleware
@@ -29,8 +56,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+
+zSTATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Configure Postgres database based on connection string of the libpq
@@ -53,4 +82,3 @@ DATABASES = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AZURE_STORAGE_CONNECTION_STRING = os.environ['AZURE_STORAGE_CONNECTION_STRING']
 AZURE_STORAGE_CONTAINER_NAME = os.environ['AZURE_STORAGE_CONTAINER_NAME']
-       
