@@ -10,8 +10,8 @@ ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] \
 CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']] \
     if 'WEBSITE_HOSTNAME' in os.environ else []
 
+# Parse Redis URL
 redis_url = os.environ['redis_url']
-# Manually parse the Redis URL string
 params = {}
 for param in redis_url.split(','):
     key_value = param.split('=', 1)
@@ -20,20 +20,25 @@ for param in redis_url.split(','):
     else:
         params['hostname'] = key_value[0]
 
-# Extract the components
 hostname, port = params.get('hostname').split(':')
 password = params.get('password')
+ssl = params.get('ssl') == 'True'
 abort_connect = params.get('abortConnect') == 'False'
 
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f"redis://:{password}@{hostname}:{port}/0",
+        'LOCATION': f"rediss://:{password}@{hostname}:{port}/0",  # Note 'rediss' for SSL
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'PASSWORD': password,
-            'SSL': True,
-            'ABORT_CONNECT': abort_connect
+            'SSL': ssl,
+            'CONNECTION_POOL_KWARGS': {
+                'ssl_cert_reqs': None,  # Only if you need to disable SSL cert verification
+                'retry_on_timeout': True,
+                'socket_connect_timeout': 20,  # Timeout for connecting
+                'socket_timeout': 20,  # Timeout for reading
+            }
         }
     }
 }
