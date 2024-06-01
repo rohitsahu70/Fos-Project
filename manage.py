@@ -8,8 +8,13 @@ class SettingsModuleNotSetException(Exception):
         self.message = message
         super().__init__(self.message)
 
+        
+
 def main():
     """Run administrative tasks."""
+
+    # Set DJANGO_SETTINGS_MODULE if not already set
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fos_database_server.settings.development')
 
     # Check if DJANGO_SETTINGS_MODULE is set
     settings_module = os.environ.get('DJANGO_SETTINGS_MODULE')
