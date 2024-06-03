@@ -86,6 +86,9 @@ def file_upload(request):
                     blob_client.upload_blob(file)
                     uploaded_file = UploadedFile(file_name=file.name, file_url=blob_client.url)
                     uploaded_file.save()
+                    new_file = form.save(commit=False)
+                    new_file.uploader = request.user
+                    new_file.save()
                     messages.success(request, 'File uploaded and verified successfully')
                 except ResourceExistsError:
                     messages.success(request, 'File already exists in Azure Blob Storage')
