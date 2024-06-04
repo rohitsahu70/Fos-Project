@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import file_upload, file_delete, file_manage, file_analyze, azure_blob_folders
+from .views import file_upload, file_delete, file_manage, file_download, azure_blob_folders
 
 urlpatterns = [
     path('file_upload/', file_upload, name='file-upload'),
