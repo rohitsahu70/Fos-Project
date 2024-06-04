@@ -50,7 +50,7 @@
 		     <span class="file-overwrap file-event file-minwidth-event">{{ file.get_event_type_display }}</span>
 		     <span class="file-overwrap file-event file-minwidth-description">{{ file.event_description }}</span>
 		     <div class="file-overwrap file-actions file-minwidth-actions">
-		         <form action="{% url 'file-analyze' file.id %}" method="post">
+		         <form action="{% url 'file_download' file.id %}" method="post">
 		             {% csrf_token %}
 		             <button type="submit" class="analyze-button">Download</button>
 		         </form>
