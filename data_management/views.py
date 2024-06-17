@@ -12,7 +12,9 @@ from .models import UploadedFile
 from django.conf import settings
 from azure.storage.blob import BlobServiceClient
 from django.http import JsonResponse
-from fos_database_server.settings.production import AZURE_STORAGE_CONNECTION_STRING,AZURE_STORAGE_CONTAINER_NAME
+from fos_database_server.settings.development import AZURE_STORAGE_CONNECTION_STRING,AZURE_STORAGE_CONTAINER_NAME
+connection_string = AZURE_STORAGE_CONNECTION_STRING
+container_name = AZURE_STORAGE_CONTAINER_NAME
 
 @login_required
 def file_manage(request):
@@ -106,29 +108,22 @@ def file_delete(request, file_id):
     settings_file_name = settings.SETTINGS_MODULE.split('.')[-1]
     if request.method == 'POST':
         if settings_file_name == "development":
-            file_to_delete=FileUpload.objects.get(pk=file_id)
+            file_to_delete = get_object_or_404(FileUpload, pk=file_id)
             file_to_delete.file.delete() 
             file_to_delete.delete()
             return redirect('file-manage')
         
         elif settings_file_name == "production":
-            
             file_to_delete = get_object_or_404(FileUpload, pk=file_id)
             user_id = request.user.id
             fos_serial_number = file_to_delete.fos_serial_number
             file_data = str(file_to_delete.file)
             file_name = file_data.split('/')[-1]
-
-            # Azure Blob Storage setup
-            connection_string = AZURE_STORAGE_CONNECTION_STRING
-            container_name = AZURE_STORAGE_CONTAINER_NAME
-
             blob_service_client = BlobServiceClient.from_connection_string(connection_string)
             blob_client = blob_service_client.get_blob_client(container=container_name, blob=f"{fos_serial_number}/{user_id}/{file_name}")
             blob_client.delete_blob()
             file_to_delete.delete()
             return redirect('file-manage')
-
         else:
             messages.error(request, "Invalid request")
             return redirect('file-manage')
@@ -142,9 +137,6 @@ def file_download(request, file_id):
         fos_serial_number = file_to_download.fos_serial_number
         file_data = str(file_to_download.file)
         file_name = file_data.split('/')[-1]
-        connection_string = AZURE_STORAGE_CONNECTION_STRING
-        container_name = AZURE_STORAGE_CONTAINER_NAME
-
         blob_service_client = BlobServiceClient.from_connection_string(connection_string)
         blob_client = blob_service_client.get_blob_client(container=container_name, blob=f"{fos_serial_number}/{user_id}/{file_name}")
         try:
