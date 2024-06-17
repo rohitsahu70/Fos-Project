@@ -133,7 +133,7 @@ def file_delete(request, file_id):
 @login_required
 def file_download(request, file_id):
     if request.method == 'POST':
-        pass
+        return redirect('file-manage')    
     else:
         messages.error(request, "Invalid request")
         return redirect('file-manage')         
