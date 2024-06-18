@@ -2,70 +2,121 @@
 {% load static %}
 {% block title %}Manage FOS Data{% endblock %}
 
-
-
 {% block body %}
-<div class="page-body">
-	<div class="manage-files-title">
-		 <h1>Manage FOS Data</h1>
-	</div>
-	<div class="manage-files-filter-container">
-		 <form class="filter-form" method="get" action="{% url 'file-manage' %}">
-		     <div class="manage-form-group">
-		         <label for="fos_serial_number">FOS Serial Number:</label>
-		         <input type="checkbox" id="use_fos_serial_number" name="use_fos_serial_number">
-		         <input type="text" name="fos_serial_number" placeholder="FOS Serial Number" id="fos_serial_number">
-		     </div>
-		     <div class="manage-form-group">
-		         <label for="event_type">Event Type:</label>
-		         <input type="checkbox" id="use_event_type" name="use_event_type">
-		         <select name="event_type" id="event_type">
-		             <option value="">Select an event type</option>
-		             {% for id, name in form.fields.event_type.choices %}
-		             <option value="{{ id }}">{{ name }}</option>
-		             {% endfor %}
-		         </select>
-		     </div>
-		     <div class="manage-form-group">
-		         <label for="channel">Channel:</label>
-		         <input type="checkbox" id="use_channel" name="use_channel">
-		         <input type="number" name="channel" placeholder="Channel" id="channel">
-		     </div>
-		     <button type="submit" class="btn filter-button">Filter</button>
-		 </form>
-	</div>
+<style>
+    .modal {
+        display: none; 
+        position: fixed; 
+        z-index: 1000; 
+        left: 0;
+        top: 0;
+        width: 100%; 
+        height: 100%; 
+        overflow: auto; 
+        background-color: rgba(0, 0, 0, 0.4); 
+        padding-top: 60px;
+    }
 
-	<div class="manage-files-container">
-		 <div class="file-list-header">
-		     <span class="file-info file-minwidth-serial">FOS Serial No.</span>
-		     <span class="file-info file-minwidth-name">File Name</span>
-		     <span class="file-info file-minwidth-event">Event</span>
-		     <span class="file-info file-minwidth-description">Description</span>
-		     <span class="file-info file-minwidth-actions">Actions</span>
-		 </div>
-		 {% for file in files %}
-		 <div class="file-item">
-		     <span class="file-overwrap file-info file-minwidth-serial">{{ file.fos_serial_number }}</span>
-		     <span class="file-overwrap file-info file-minwidth-name">{{ file.file.name|cut:"uploads/" }}</span>
-		     <span class="file-overwrap file-event file-minwidth-event">{{ file.get_event_type_display }}</span>
-		     <span class="file-overwrap file-event file-minwidth-description">{{ file.event_description }}</span>
-		     <div class="file-overwrap file-actions file-minwidth-actions">
-		         <form action="{% url 'file_download' file.pk %}" method="post"  onsubmit="return confirm('Are you sure you want to Download this file?');">
-		             {% csrf_token %}
-		             <button type="submit" class="analyze-button">Download</button>
-		         </form>
-		         {% if request.user.is_staff %}
-		         <form action="{% url 'file-delete' file.pk %}" method="post" onsubmit="return confirm('Are you sure you want to delete this file?');">
-		             {% csrf_token %}
-		             <button type="submit" class="delete-button">Delete</button>
-		         </form>
-		         {% endif %}
-		     </div>
-		 </div>
-		 {% empty %}
-		 <p>No files uploaded.</p>
-		 {% endfor %}
-	</div>
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto; 
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; 
+        max-width: 500px; 
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+<div class="page-body">
+    <div class="manage-files-title">
+         <h1>Manage FOS Data</h1>
+    </div>
+
+    {% if messages %}
+    <div id="messages" class="message-container">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div id="alertModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalMessage"></p>
+        </div>
+    </div>
+
+    <div class="manage-files-filter-container">
+         <form class="filter-form" method="get" action="{% url 'file-manage' %}">
+             <div class="manage-form-group">
+                 <label for="fos_serial_number">FOS Serial Number:</label>
+                 <input type="checkbox" id="use_fos_serial_number" name="use_fos_serial_number">
+                 <input type="text" name="fos_serial_number" placeholder="FOS Serial Number" id="fos_serial_number">
+             </div>
+             <div class="manage-form-group">
+                 <label for="event_type">Event Type:</label>
+                 <input type="checkbox" id="use_event_type" name="use_event_type">
+                 <select name="event_type" id="event_type">
+                     <option value="">Select an event type</option>
+                     {% for id, name in form.fields.event_type.choices %}
+                     <option value="{{ id }}">{{ name }}</option>
+                     {% endfor %}
+                 </select>
+             </div>
+             <div class="manage-form-group">
+                 <label for="channel">Channel:</label>
+                 <input type="checkbox" id="use_channel" name="use_channel">
+                 <input type="number" name="channel" placeholder="Channel" id="channel">
+             </div>
+             <button type="submit" class="btn filter-button">Filter</button>
+         </form>
+    </div>
+
+    <div class="manage-files-container">
+         <div class="file-list-header">
+             <span class="file-info file-minwidth-serial">FOS Serial No.</span>
+             <span class="file-info file-minwidth-name">File Name</span>
+             <span class="file-info file-minwidth-event">Event</span>
+             <span class="file-info file-minwidth-description">Description</span>
+             <span class="file-info file-minwidth-actions">Actions</span>
+         </div>
+         {% for file in files %}
+         <div class="file-item">
+             <span class="file-overwrap file-info file-minwidth-serial">{{ file.fos_serial_number }}</span>
+             <span class="file-overwrap file-info file-minwidth-name">{{ file.file.name|cut:"uploads/" }}</span>
+             <span class="file-overwrap file-event file-minwidth-event">{{ file.get_event_type_display }}</span>
+             <span class="file-overwrap file-event file-minwidth-description">{{ file.event_description }}</span>
+             <div class="file-overwrap file-actions file-minwidth-actions">
+                 <form action="{% url 'file_download' file.pk %}" method="post"  onsubmit="return confirm('Are you sure you want to Download this file?');">
+                     {% csrf_token %}
+                     <button type="submit" class="analyze-button">Download</button>
+                 </form>
+                 {% if request.user.is_staff %}
+                 <form action="{% url 'file-delete' file.pk %}" method="post" onsubmit="return confirm('Are you sure you want to delete this file?');">
+                     {% csrf_token %}
+                     <button type="submit" class="delete-button">Delete</button>
+                 </form>
+                 {% endif %}
+             </div>
+         </div>
+         {% empty %}
+         <p>No files uploaded.</p>
+         {% endfor %}
+    </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
@@ -82,6 +133,32 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleInput('use_fos_serial_number', 'fos_serial_number');
     toggleInput('use_event_type', 'event_type');
     toggleInput('use_channel', 'channel');
+
+    const messages = document.getElementById('messages');
+    if (messages) {
+        const modal = document.getElementById('alertModal');
+        const span = document.getElementsByClassName('close')[0];
+        const modalMessage = document.getElementById('modalMessage');
+        
+        modalMessage.innerText = messages.innerText;
+        modal.style.display = 'block';
+
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        setTimeout(function() {
+            modal.style.display = 'none';
+            messages.innerHTML = '';
+            messages.style.display = 'none';
+        }, 2000); // Automatically close the modal and clear messages after 2 seconds
+    }
 });
 $(document).ready(function(){
     $('#filter-form').submit(function(event){
