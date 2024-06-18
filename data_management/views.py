@@ -13,8 +13,7 @@ from django.conf import settings
 from azure.storage.blob import BlobServiceClient
 from django.http import JsonResponse
 from azure.core.exceptions import ResourceNotFoundError
-# from fos_database_server.settings.production import AZURE_STORAGE_CONNECTION_STRING,AZURE_STORAGE_CONTAINER_NAME
-from fos_database_server.settings.development import AZURE_STORAGE_CONNECTION_STRING,AZURE_STORAGE_CONTAINER_NAME
+from fos_database_server.settings.production import AZURE_STORAGE_CONNECTION_STRING,AZURE_STORAGE_CONTAINER_NAME
 
 @login_required
 def file_manage(request):
