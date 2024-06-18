@@ -140,24 +140,7 @@ def file_delete(request, file_id):
 @login_required
 def file_download(request, file_id):
     if request.method == 'POST':
-        file_to_download = get_object_or_404(FileUpload, pk=file_id)
-        user_id = request.user.id
-        fos_serial_number = file_to_download.fos_serial_number
-        file_data = str(file_to_download.file)
-        file_name = file_data.split('/')[-1]
-        connection_string=AZURE_STORAGE_CONNECTION_STRING
-        container_name=AZURE_STORAGE_CONTAINER_NAME
-        blob_service_client = BlobServiceClient.from_connection_string(connection_string)
-        blob_client = blob_service_client.get_blob_client(container=container_name, blob=f"{fos_serial_number}/{user_id}/{file_name}")
-        try:
-            blob_data = blob_client.download_blob().readall()
-            response = HttpResponse(blob_data, content_type='application/octet-stream')
-            response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-            return response
-        except Exception as e:
-            messages.error(request, f"Error downloading file: {e}")
-            return redirect('file-manage')
-
+        return redirect('file-manage')    
     else:
         messages.error(request, "Invalid request")
         return redirect('file-manage')         
