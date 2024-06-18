@@ -106,13 +106,13 @@ def file_upload(request):
 def file_delete(request, file_id):
     settings_file_name = settings.SETTINGS_MODULE.split('.')[-1]
     if request.method == 'POST':
-        if settings_file_name == "production":
+        if settings_file_name == "development":
             file_to_delete = get_object_or_404(FileUpload, pk=file_id)
             file_to_delete.file.delete() 
             file_to_delete.delete()
             return redirect('file-manage')
         
-        elif settings_file_name == "development":
+        elif settings_file_name == "production":
             file_to_delete = get_object_or_404(FileUpload, pk=file_id)
             user_id = request.user.id
             fos_serial_number = file_to_delete.fos_serial_number
